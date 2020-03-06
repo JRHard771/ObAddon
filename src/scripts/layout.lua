@@ -1625,6 +1625,39 @@ function Layout_decorate_rooms(pass)
     end
 
     local function try_wg_point_fab(A, wg_mode, reqs)
+
+      local function check_reqs(reqs, wg_fab_table)
+        local pt_pick
+        local o_o_def
+
+        for tries = 1, 5 do
+
+          pt_pick = rand.key_by_probs(wg_fab_table)
+          o_o_def = PREFABS[pt_pick]
+          gui.printf(o_o_def.name .. "heya")
+
+          -- does this fab even exist?
+          if not o_o_def then
+            error(pt_pick .. " not found!\n" ..
+            "Check " .. wg .. " entries, you punk-ass beach!")
+          end
+
+          -- check size and height requirements
+          if o_o_def.size and o_o_def.size <= reqs.size then
+            if not o_o_def.height then
+              return o_o_def
+            end
+
+            if o_o_def.height and o_o_def.height <= reqs.height then
+              return o_o_def
+            end
+          end
+
+        end
+
+        return Fab_pick(reqs, "none_ok")
+      end
+
       local wg
 
       if A.floor_group and A.floor_group.wall_group then
@@ -1637,18 +1670,7 @@ function Layout_decorate_rooms(pass)
       -- if ungrouped, pick a point fab in the wall group decor list
       if wg_mode == "UNGROUPED" then
         if tab[wg] then
-          local pt_pick
-
-          pt_pick = rand.key_by_probs(tab[wg].point_fabs)
-          o_def = PREFABS[pt_pick]
-          if not o_def then
-            error(pt_pick .. " not found!\n" ..
-            "Check " .. wg .. " entries, you punk-ass beach!")
-          end
-
-          -- MSSP-TODO: check if the force-picked fab even fits the damn
-          -- height or radius! 5 tries else return none.
-
+          o_def = check_reqs(reqs, tab[wg])
         else
           o_def = Fab_pick(reqs, "none_ok")
         end
@@ -1656,8 +1678,8 @@ function Layout_decorate_rooms(pass)
       -- if rand, just pick any random decor as normal
       elseif wg_mode == "RAND" then
         o_def = Fab_pick(reqs, "none_ok")
-      -- pick a fab based on an existing group if specified
 
+      -- pick a fab based on an existing group if specified
       else
         reqs.group = wg_mode
         o_def = Fab_pick(reqs, "none_ok")

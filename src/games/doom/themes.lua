@@ -1182,7 +1182,7 @@ DOOM.THEMES =
       torches6 = 3
       torches7 = 65
       torches11 = 7
-      gtd_wall_urban_storage = 25
+      gtd_wall_urban_storage = 25000
       gtd_wall_tech_top_corner_light_set = 25
       gtd_wall_server_room = 25
       gtd_wall_sewer = 25
@@ -4401,7 +4401,7 @@ DOOM.WALL_GROUP_DECOR =
   {
     point_groups =
     {
-      UNGROUPED = 1 --if this is picked, pick from the fabs table below
+      UNGROUPED = 3 --if this is picked, pick from the fabs table below
       RAND = 1 --if this is picked... standard rule of whatever qualifies
                --for that theme
     }
